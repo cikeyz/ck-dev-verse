@@ -1,0 +1,762 @@
+/* ---------------------------
+   RESET
+   Standard box-model reset so I start from a clean slate.
+   --------------------------- */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+/* ---------------------------
+   CSS VARIABLES
+   Color tokens and font stack for the cosmic terminal theme.
+   --amber is the primary accent; --violet is decorative only.
+   --------------------------- */
+:root {
+  --bg: #030303;
+  --panel: rgba(15, 15, 15, 0.95);
+  --panel-border: rgba(255, 204, 0, 0.2);
+  --amber: #ffcc00;
+  --amber-glow: rgba(255, 204, 0, 0.1);
+  --violet: #3f3f46;
+  --text: #e4e4e7;
+  --dim: #71717a;
+  --font: 'Cascadia Code', 'Consolas', 'SF Mono', 'Menlo', monospace;
+}
+
+/* ---------------------------
+   SPACE BACKGROUND
+   body::before  = ~90 star dots via box-shadow
+   body::after   = two soft radial-gradient nebula blobs
+   Both are fixed so they stay while content scrolls.
+   --------------------------- */
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--font);
+  font-size: 15px;
+  line-height: 1.7;
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+body::before {
+  content: '';
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 1px;
+  height: 1px;
+  z-index: -2;
+  box-shadow:
+    25px 18px 0 0.5px #fff, 120px 45px 0 0 rgba(255, 255, 255, 0.5),
+    230px 80px 0 0.5px #fff, 370px 30px 0 0 rgba(255, 255, 255, 0.4),
+    490px 95px 0 1px #fff, 620px 55px 0 0 rgba(255, 255, 255, 0.6),
+    750px 120px 0 0.5px #fff, 880px 20px 0 0 rgba(255, 255, 255, 0.3),
+    1020px 70px 0 0.5px #fff, 1160px 110px 0 0 rgba(255, 255, 255, 0.5),
+    1300px 40px 0 1px #fff, 1440px 85px 0 0 rgba(255, 255, 255, 0.4),
+    1600px 60px 0 0.5px #fff, 1780px 130px 0 0 rgba(255, 255, 255, 0.6),
+    1920px 25px 0 0 #fff, 2060px 100px 0 0.5px rgba(255, 255, 255, 0.5),
+    50px 220px 0 0 rgba(255, 255, 255, 0.4), 180px 310px 0 0.5px #fff,
+    320px 260px 0 0 rgba(255, 255, 255, 0.6), 460px 380px 0 1px #fff,
+    590px 200px 0 0 rgba(255, 255, 255, 0.3), 730px 340px 0 0.5px #fff,
+    870px 250px 0 0 rgba(255, 255, 255, 0.5), 1010px 370px 0 0 #fff,
+    1150px 290px 0 0.5px rgba(255, 255, 255, 0.4), 1280px 210px 0 0 #fff,
+    1430px 360px 0 1px rgba(255, 255, 255, 0.6), 1580px 280px 0 0.5px #fff,
+    1720px 330px 0 0 rgba(255, 255, 255, 0.3), 1860px 240px 0 0 #fff,
+    60px 450px 0 0.5px rgba(255, 255, 255, 0.5), 200px 530px 0 0 #fff,
+    340px 470px 0 0 rgba(255, 255, 255, 0.4), 480px 550px 0 1px #fff,
+    610px 420px 0 0.5px #fff, 740px 510px 0 0 rgba(255, 255, 255, 0.6),
+    890px 440px 0 0 #fff, 1030px 520px 0 0.5px rgba(255, 255, 255, 0.3),
+    1170px 460px 0 0 #fff, 1310px 540px 0 0.5px #fff,
+    1460px 490px 0 0 rgba(255, 255, 255, 0.5), 1610px 430px 0 1px #fff,
+    1750px 500px 0 0 rgba(255, 255, 255, 0.4), 1900px 560px 0 0.5px #fff,
+    30px 650px 0 0 #fff, 170px 730px 0 0.5px rgba(255, 255, 255, 0.6),
+    300px 670px 0 0 rgba(255, 255, 255, 0.3), 440px 750px 0 1px #fff,
+    580px 620px 0 0 rgba(255, 255, 255, 0.5), 720px 700px 0 0.5px #fff,
+    860px 640px 0 0 #fff, 1000px 740px 0 0 rgba(255, 255, 255, 0.4),
+    1140px 680px 0 0.5px #fff, 1290px 610px 0 0 rgba(255, 255, 255, 0.6),
+    1420px 760px 0 1px #fff, 1570px 660px 0 0.5px rgba(255, 255, 255, 0.3),
+    45px 850px 0 0 #fff, 190px 920px 0 0.5px rgba(255, 255, 255, 0.5),
+    330px 870px 0 0 rgba(255, 255, 255, 0.4), 470px 950px 0 1px #fff,
+    600px 810px 0 0.5px #fff, 740px 900px 0 0 rgba(255, 255, 255, 0.6),
+    880px 840px 0 0 #fff, 1020px 930px 0 0.5px rgba(255, 255, 255, 0.3),
+    1170px 860px 0 0 #fff, 1300px 810px 0 0.5px #fff,
+    1450px 940px 0 0 rgba(255, 255, 255, 0.5), 1590px 870px 0 1px #fff,
+    90px 1050px 0 0 rgba(255, 255, 255, 0.4), 250px 1130px 0 0.5px #fff,
+    410px 1080px 0 0 #fff, 560px 1150px 0 0.5px rgba(255, 255, 255, 0.6),
+    710px 1020px 0 0 rgba(255, 255, 255, 0.3), 850px 1100px 0 1px #fff,
+    1000px 1060px 0 0 #fff, 1150px 1140px 0 0.5px rgba(255, 255, 255, 0.5),
+    130px 1250px 0 0 #fff, 350px 1340px 0 0.5px rgba(255, 255, 255, 0.4),
+    550px 1280px 0 0 #fff, 770px 1400px 0 1px rgba(255, 255, 255, 0.6),
+    960px 1310px 0 0 rgba(255, 255, 255, 0.3), 1180px 1450px 0 0.5px #fff;
+}
+
+body::after {
+  content: '';
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: -1;
+  pointer-events: none;
+  background:
+    radial-gradient(ellipse at 18% 45%, rgba(255, 204, 0, 0.05) 0%, transparent 55%),
+    radial-gradient(ellipse at 82% 25%, rgba(255, 255, 255, 0.03) 0%, transparent 50%);
+}
+
+/* ---------------------------
+   NAVIGATION
+   Fixed nav bar at the top, styled as terminal commands.
+   Active link gets amber color.
+   --------------------------- */
+#main-nav {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 100;
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+  padding: 0.6rem 1.5rem;
+  background: rgba(10, 10, 20, 0.92);
+  border-bottom: 1px solid var(--panel-border);
+  backdrop-filter: blur(8px);
+}
+
+.nav-logo {
+  color: var(--amber);
+  font-weight: bold;
+  font-size: 1rem;
+  white-space: nowrap;
+}
+
+#main-nav ul {
+  list-style: none;
+  display: flex;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+#main-nav a {
+  color: var(--dim);
+  text-decoration: none;
+  font-size: 0.82rem;
+  transition: color 0.25s;
+}
+
+#main-nav a:hover,
+#main-nav a.active {
+  color: var(--amber);
+}
+
+/* ---------------------------
+   TERMINAL WINDOW
+   Each major section is wrapped in .terminal-window.
+   .terminal-bar = top chrome with amber dots + title.
+   .terminal-body = content area with padding.
+   Subtle amber glow on hover.
+   --------------------------- */
+.terminal-window {
+  background: var(--panel);
+  border: 1px solid var(--panel-border);
+  border-radius: 8px;
+  max-width: 900px;
+  margin: 0 auto;
+  transition: box-shadow 0.4s;
+}
+
+.terminal-window:hover {
+  box-shadow:
+    0 4px 30px var(--amber-glow),
+    0 0 60px rgba(255, 179, 71, 0.04);
+}
+
+.terminal-bar {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.55rem 1rem;
+  border-bottom: 1px solid var(--panel-border);
+  background: rgba(18, 18, 31, 0.6);
+  border-radius: 8px 8px 0 0;
+}
+
+.terminal-dots {
+  display: flex;
+  gap: 6px;
+}
+
+.terminal-dots span {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: var(--amber);
+  opacity: 0.85;
+}
+
+.terminal-title {
+  color: var(--dim);
+  font-size: 0.82rem;
+}
+
+.terminal-body {
+  padding: 1.5rem 1.8rem;
+}
+
+/* ---------------------------
+   SECTIONS
+   General section spacing, hero layout, profile photo,
+   affiliation logos, about grid, skills grid.
+   --------------------------- */
+section {
+  padding: 2rem 1.2rem;
+  scroll-margin-top: 3.5rem;
+}
+
+/* Hero */
+#hero {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 100dvh;
+  padding: 4rem 1.2rem 2rem;
+}
+
+.hero-terminal {
+  max-width: 700px;
+  width: 100%;
+}
+
+#boot-log {
+  color: var(--amber);
+  font-size: 0.9rem;
+  line-height: 1.8;
+  white-space: pre-wrap;
+  min-height: 2rem;
+}
+
+/* === MODIFIED: interactive boot terminal ===
+   Before boot: nav, main, footer are hidden.
+   body.booted reveals them with a fade transition.
+   Command-line input styled to blend into terminal. */
+
+/* Pre-boot: hide everything except the hero terminal */
+#main-nav,
+main,
+footer {
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.8s;
+}
+
+body.booted #main-nav,
+body.booted main,
+body.booted footer {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+/* Command line - inline prompt + invisible input */
+#command-line {
+  display: flex;
+  align-items: center;
+  margin-top: 0.3rem;
+}
+
+.cmd-prefix {
+  color: var(--amber);
+  font-size: 0.9rem;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+#command-input {
+  flex: 1;
+  background: transparent;
+  border: none;
+  outline: none;
+  color: var(--text);
+  font-family: var(--font);
+  font-size: 0.9rem;
+  caret-color: var(--amber);
+  padding: 0;
+}
+
+#hero-content h1 {
+  color: var(--amber);
+  font-size: 1.8rem;
+  letter-spacing: 2px;
+  margin-top: 1rem;
+}
+
+.tagline {
+  color: var(--dim);
+  font-size: 0.95rem;
+  margin-top: 0.3rem;
+}
+
+.prompt {
+  color: var(--amber);
+  font-size: 1.1rem;
+  display: inline-block;
+  margin-top: 0.8rem;
+}
+
+.hidden {
+  opacity: 0;
+  transition: opacity 0.8s;
+}
+
+.visible {
+  opacity: 1;
+}
+
+/* About grid: photo left, text right */
+.about-grid {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 1.5rem;
+  align-items: start;
+}
+
+.profile-figure {
+  text-align: center;
+}
+
+.profile-figure img {
+  width: 140px;
+  height: 140px;
+  object-fit: cover;
+  border-radius: 6px;
+  border: 2px solid var(--panel-border);
+}
+
+.profile-figure figcaption {
+  margin-top: 0.5rem;
+  font-size: 0.82rem;
+  color: var(--dim);
+}
+
+.about-text p {
+  margin-bottom: 0.8rem;
+}
+
+.affiliation-logos {
+  list-style: none;
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+  margin-top: 1.5rem;
+  padding-top: 1rem;
+  border-top: 1px solid var(--panel-border);
+}
+
+.affiliation-logos img {
+  height: 40px;
+  width: auto;
+  opacity: 0.8;
+  transition: opacity 0.3s;
+}
+
+.affiliation-logos img:hover {
+  opacity: 1;
+}
+
+/* Skills grid: two columns */
+.skills-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 2rem;
+}
+
+/* Section sub-headings styled as terminal prompts */
+.section-sub {
+  color: var(--amber);
+  font-size: 0.95rem;
+  font-weight: normal;
+  margin: 1.2rem 0 0.6rem;
+}
+
+.section-sub:first-child {
+  margin-top: 0;
+}
+
+/* ---------------------------
+   TABLE
+   Education table with amber borders.
+   Uses thead/tbody structure per lesson.
+   --------------------------- */
+table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.88rem;
+}
+
+th,
+td {
+  padding: 0.55rem 0.8rem;
+  border: 1px solid var(--panel-border);
+  text-align: left;
+}
+
+th {
+  background: rgba(255, 179, 71, 0.08);
+  color: var(--amber);
+  font-weight: bold;
+  text-transform: uppercase;
+  font-size: 0.78rem;
+  letter-spacing: 1px;
+}
+
+td small {
+  color: var(--dim);
+}
+
+/* ---------------------------
+   LISTS
+   Ordered, unordered, and definition list styling.
+   <mark> overridden to amber bg instead of default yellow.
+   --------------------------- */
+ul,
+ol {
+  padding-left: 1.5rem;
+  margin-bottom: 0rem;
+}
+
+li {
+  margin-bottom: 0rem;
+  font-size: 0.9rem;
+}
+
+li::marker {
+  color: var(--amber);
+}
+
+ol[type="I"] {
+  padding-left: 2rem;
+}
+
+ol[type="I"]>li {
+  color: var(--amber);
+  margin-bottom: 0.6rem;
+}
+
+ol[type="I"]>li>ul {
+  color: var(--text);
+}
+
+dl {
+  margin-bottom: 0.5rem;
+}
+
+dt {
+  color: var(--amber);
+  font-weight: bold;
+  font-size: 0.88rem;
+  margin-top: 0.8rem;
+}
+
+dd {
+  color: var(--dim);
+  font-size: 0.85rem;
+  margin-left: 1rem;
+  margin-top: 0.15rem;
+}
+
+mark {
+  background: rgba(255, 179, 71, 0.2);
+  color: var(--amber);
+  padding: 0.1rem 0.4rem;
+  border-radius: 3px;
+}
+
+small {
+  color: var(--dim);
+  font-size: 0.8em;
+  margin-left: 0.3rem;
+}
+
+ins {
+  color: #4ade80;
+  text-decoration: none;
+}
+
+del {
+  color: #f87171;
+  opacity: 0.6;
+}
+
+a {
+  color: var(--amber);
+  text-decoration: none;
+  transition: color 0.25s;
+}
+
+a:hover {
+  color: var(--violet);
+}
+
+/* ---------------------------
+   FORM
+   Terminal-styled contact form.
+   Fieldset/legend as section header, inputs styled to match.
+   --------------------------- */
+fieldset {
+  border: 1px solid var(--panel-border);
+  padding: 1.2rem;
+  border-radius: 4px;
+}
+
+legend {
+  color: var(--amber);
+  font-size: 0.9rem;
+  padding: 0 0.5rem;
+}
+
+label {
+  display: block;
+  color: var(--amber);
+  font-size: 0.85rem;
+  margin-top: 0.8rem;
+  margin-bottom: 0.25rem;
+}
+
+input[type="text"],
+input[type="email"],
+input[type="password"],
+select,
+textarea {
+  width: 100%;
+  padding: 0.5rem 0.8rem;
+  background: rgba(10, 10, 20, 0.6);
+  border: 1px solid var(--panel-border);
+  border-radius: 4px;
+  color: var(--text);
+  font-family: var(--font);
+  font-size: 0.88rem;
+  outline: none;
+  transition: border-color 0.3s;
+}
+
+input:focus,
+select:focus,
+textarea:focus {
+  border-color: var(--amber);
+}
+
+select {
+  cursor: pointer;
+}
+
+select option {
+  background: var(--bg);
+  color: var(--text);
+}
+
+button[type="submit"] {
+  display: inline-block;
+  margin-top: 1rem;
+  padding: 0.55rem 1.5rem;
+  background: transparent;
+  border: 1px solid var(--amber);
+  color: var(--amber);
+  font-family: var(--font);
+  font-size: 0.9rem;
+  cursor: pointer;
+  border-radius: 4px;
+  transition: background 0.3s, transform 0.15s;
+}
+
+button[type="submit"]:hover {
+  background: rgba(255, 179, 71, 0.12);
+}
+
+button[type="submit"]:active {
+  transform: scale(0.97);
+}
+
+#form-output {
+  margin-top: 1rem;
+  color: #4ade80;
+  font-size: 0.88rem;
+  min-height: 1.2rem;
+}
+
+/* ---------------------------
+   FOOTER
+   --------------------------- */
+footer {
+  text-align: center;
+  padding: 2rem 1rem;
+  color: var(--dim);
+  font-size: 0.78rem;
+  border-top: 1px solid var(--panel-border);
+  margin-top: 2rem;
+}
+
+/* ---------------------------
+   ANIMATIONS
+   Blinking cursor keyframe, used on the hero prompt.
+   --------------------------- */
+@keyframes blink {
+
+  0%,
+  100% {
+    opacity: 1;
+  }
+
+  50% {
+    opacity: 0;
+  }
+}
+
+.cursor {
+  animation: blink 1s step-end infinite;
+  color: var(--amber);
+}
+
+/* === MODIFIED: work.sh section ===
+   Job cards with optional amber left border for current role.
+   .current-role gets the stronger visual treatment.
+   --------------------------- */
+.job-card {
+  padding: 1rem 0;
+  border-bottom: 1px solid var(--panel-border);
+}
+
+.job-card:last-child {
+  border-bottom: none;
+}
+
+.current-role {
+  border-left: 3px solid var(--amber);
+  padding-left: 1rem;
+}
+
+.current-role .job-title {
+  font-size: 1.1rem;
+  color: var(--amber);
+}
+
+.job-card h3 {
+  font-size: 0.95rem;
+  margin-bottom: 0.15rem;
+}
+
+.job-card h4 {
+  font-size: 0.82rem;
+  font-weight: normal;
+  color: var(--dim);
+  margin-bottom: 0.5rem;
+}
+
+/* === MODIFIED: projects.sh section ===
+   Project cards with amber left border and tech-stack tags.
+   Category headers styled as "// 01. HARDWARE ENGINEERING".
+   --------------------------- */
+.project-category {
+  color: var(--dim);
+  font-size: 0.82rem;
+  font-weight: normal;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  margin: 1.8rem 0 0.8rem;
+}
+
+.project-category:first-child {
+  margin-top: 0;
+}
+
+.project-card {
+  border-left: 2px solid var(--panel-border);
+  padding: 0.8rem 0 0.8rem 1rem;
+  margin-bottom: 0.6rem;
+  transition: border-color 0.3s;
+}
+
+.project-card:hover {
+  border-color: var(--amber);
+}
+
+.project-card h4 {
+  font-size: 0.92rem;
+  margin-bottom: 0.2rem;
+}
+
+.tech-stack {
+  font-size: 0.75rem;
+  color: var(--dim);
+  margin-bottom: 0.4rem;
+  letter-spacing: 0.5px;
+}
+
+/* === MODIFIED: research.sh section ===
+   Definition list with amber dt (styled as terminal commands),
+   off-white dd, and dashed separators between entries.
+   --------------------------- */
+.research-list dt {
+  color: var(--amber);
+  font-family: var(--font);
+  font-weight: bold;
+  font-size: 0.88rem;
+  margin-top: 1.2rem;
+  padding-top: 1.2rem;
+  border-top: 1px dashed rgba(107, 114, 128, 0.3);
+}
+
+.research-list dt:first-child {
+  margin-top: 0;
+  padding-top: 0;
+  border-top: none;
+}
+
+.research-list dd {
+  color: var(--text);
+  font-size: 0.85rem;
+  margin-left: 0;
+  margin-top: 0.3rem;
+  line-height: 1.6;
+}
+
+/* ---------------------------
+   RESPONSIVE
+   Stack grids on smaller screens.
+   --------------------------- */
+@media (max-width: 768px) {
+  .about-grid {
+    grid-template-columns: 1fr;
+    text-align: center;
+  }
+
+  .skills-grid {
+    grid-template-columns: 1fr;
+  }
+
+  #main-nav {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.5rem;
+  }
+
+  #main-nav ul {
+    gap: 0.5rem;
+  }
+
+  #hero-content h1 {
+    font-size: 1.3rem;
+  }
+
+  .terminal-body {
+    padding: 1rem 1.2rem;
+  }
+
+  table {
+    font-size: 0.78rem;
+  }
+}
