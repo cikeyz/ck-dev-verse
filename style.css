@@ -1,6 +1,6 @@
 /* ---------------------------
    RESET
-   Standard box-model reset so I start from a clean slate.
+   Clearing the browser defaults first so the rest is easier to control.
    --------------------------- */
 *,
 *::before,
@@ -12,26 +12,32 @@
 
 /* ---------------------------
    CSS VARIABLES
-   Color tokens and font stack for the cosmic terminal theme.
-   --amber is the primary accent; --violet is decorative only.
+   I parked the repeated colors and font choices here so the rest of the file
+   is easier to tweak later.
    --------------------------- */
 :root {
   --bg: #030303;
+  --border: rgba(255, 204, 0, 0.2);
   --panel: rgba(15, 15, 15, 0.95);
-  --panel-border: rgba(255, 204, 0, 0.2);
-  --amber: #ffcc00;
-  --amber-glow: rgba(255, 204, 0, 0.1);
-  --violet: #3f3f46;
+  --panel-border: var(--border);
+  --accent: #ffcc00;
+  --accent-glow: rgba(255, 204, 0, 0.1);
+  --accent-alt: #3f3f46;
   --text: #e4e4e7;
   --dim: #71717a;
+  --input-bg: rgba(12, 12, 12, 0.82);
+  --warm-soft: rgba(255, 204, 0, 0.08);
+  --warm-tag: rgba(255, 204, 0, 0.2);
+  --warm-hover: rgba(255, 204, 0, 0.12);
+  --warm-shadow: rgba(255, 204, 0, 0.04);
+  --success: #4ade80;
+  --rule-muted: rgba(113, 113, 122, 0.3);
   --font: 'Cascadia Code', 'Consolas', 'SF Mono', 'Menlo', monospace;
 }
 
 /* ---------------------------
    SPACE BACKGROUND
-   body::before  = ~90 star dots via box-shadow
-   body::after   = two soft radial-gradient nebula blobs
-   Both are fixed so they stay while content scrolls.
+   This builds the star field and the soft glow behind the whole page.
    --------------------------- */
 body {
   background: var(--bg);
@@ -98,10 +104,7 @@ body::before {
 body::after {
   content: '';
   position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
+  inset: 0;
   z-index: -1;
   pointer-events: none;
   background:
@@ -111,8 +114,7 @@ body::after {
 
 /* ---------------------------
    NAVIGATION
-   Fixed nav bar at the top, styled as terminal commands.
-   Active link gets amber color.
+   Fixed nav up top so section jumps stay easy even on a long page.
    --------------------------- */
 #main-nav {
   position: fixed;
@@ -122,69 +124,81 @@ body::after {
   z-index: 100;
   display: flex;
   align-items: center;
-  gap: 1.5rem;
-  padding: 0.6rem 1.5rem;
-  background: rgba(10, 10, 20, 0.92);
+  gap: 1rem;
+  padding: 0.6rem 1.3rem;
+  background: rgba(5, 5, 5, 0.92);
   border-bottom: 1px solid var(--panel-border);
   backdrop-filter: blur(8px);
 }
 
 .nav-logo {
-  color: var(--amber);
-  font-weight: bold;
+  color: var(--accent);
   font-size: 1rem;
+  font-weight: bold;
   white-space: nowrap;
 }
 
 #main-nav ul {
-  list-style: none;
   display: flex;
-  gap: 1rem;
   flex-wrap: wrap;
+  gap: 1rem;
+  list-style: none;
 }
 
 #main-nav a {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.15rem 0.45rem;
+  border: 1px solid transparent;
+  background: transparent;
   color: var(--dim);
-  text-decoration: none;
   font-size: 0.82rem;
-  transition: color 0.25s;
+  text-decoration: none;
+  transition: background 0.25s, border-color 0.25s, color 0.25s;
 }
 
-#main-nav a:hover,
+#main-nav a:hover {
+  color: var(--accent);
+  border-color: rgba(255, 204, 0, 0.35);
+  background: rgba(255, 204, 0, 0.07);
+}
+
 #main-nav a.active {
-  color: var(--amber);
+  color: var(--bg);
+  background: var(--accent);
+  border-color: var(--accent);
 }
 
 /* ---------------------------
    TERMINAL WINDOW
-   Each major section is wrapped in .terminal-window.
-   .terminal-bar = top chrome with amber dots + title.
-   .terminal-body = content area with padding.
-   Subtle amber glow on hover.
+   This is the shared shell every section sits inside.
    --------------------------- */
 .terminal-window {
-  background: var(--panel);
-  border: 1px solid var(--panel-border);
-  border-radius: 8px;
   max-width: 900px;
   margin: 0 auto;
+  position: relative;
+  overflow: hidden;
+  background:
+    linear-gradient(180deg, rgba(18, 18, 18, 0.96) 0%, rgba(9, 9, 9, 0.98) 100%);
+  border: 1px solid var(--panel-border);
+  border-radius: 0;
   transition: box-shadow 0.4s;
 }
 
 .terminal-window:hover {
   box-shadow:
-    0 4px 30px var(--amber-glow),
-    0 0 60px rgba(255, 179, 71, 0.04);
+    0 4px 30px var(--accent-glow),
+    0 0 60px var(--warm-shadow);
 }
 
 .terminal-bar {
   display: flex;
   align-items: center;
   gap: 0.75rem;
-  padding: 0.55rem 1rem;
+  padding: 0.7rem 1rem;
+  background: rgba(20, 20, 20, 0.75);
   border-bottom: 1px solid var(--panel-border);
-  background: rgba(18, 18, 31, 0.6);
-  border-radius: 8px 8px 0 0;
+  border-radius: 0;
 }
 
 .terminal-dots {
@@ -193,10 +207,10 @@ body::after {
 }
 
 .terminal-dots span {
-  width: 10px;
-  height: 10px;
-  border-radius: 50%;
-  background: var(--amber);
+  width: 9px;
+  height: 9px;
+  background: var(--accent);
+  border-radius: 0;
   opacity: 0.85;
 }
 
@@ -211,15 +225,15 @@ body::after {
 
 /* ---------------------------
    SECTIONS
-   General section spacing, hero layout, profile photo,
-   affiliation logos, about grid, skills grid.
+   Shared section spacing goes here, then the hero-specific bits after it.
    --------------------------- */
 section {
   padding: 2rem 1.2rem;
   scroll-margin-top: 3.5rem;
 }
 
-/* Hero */
+/* Hero
+   Keeping the hero centered makes the fake boot feel like the real starting screen. */
 #hero {
   display: flex;
   align-items: center;
@@ -229,24 +243,20 @@ section {
 }
 
 .hero-terminal {
-  max-width: 700px;
   width: 100%;
+  max-width: 700px;
 }
 
 #boot-log {
-  color: var(--amber);
+  min-height: 2rem;
+  color: var(--accent);
   font-size: 0.9rem;
   line-height: 1.8;
   white-space: pre-wrap;
-  min-height: 2rem;
 }
 
-/* === MODIFIED: interactive boot terminal ===
-   Before boot: nav, main, footer are hidden.
-   body.booted reveals them with a fade transition.
-   Command-line input styled to blend into terminal. */
-
-/* Pre-boot: hide everything except the hero terminal */
+/* Pre-boot
+   Before axiom_start finishes, only the hero terminal should be visible. */
 #main-nav,
 main,
 footer {
@@ -262,7 +272,8 @@ body.booted footer {
   pointer-events: auto;
 }
 
-/* Command line - inline prompt + invisible input */
+/* Command line
+   Keeping the prompt and input on one line helps it read like a real terminal. */
 #command-line {
   display: flex;
   align-items: center;
@@ -270,42 +281,56 @@ body.booted footer {
 }
 
 .cmd-prefix {
-  color: var(--amber);
+  flex-shrink: 0;
+  color: var(--accent);
   font-size: 0.9rem;
   white-space: nowrap;
-  flex-shrink: 0;
 }
 
 #command-input {
   flex: 1;
+  padding: 0;
   background: transparent;
   border: none;
   outline: none;
   color: var(--text);
   font-family: var(--font);
   font-size: 0.9rem;
-  caret-color: var(--amber);
-  padding: 0;
+  caret-color: var(--accent);
 }
 
 #hero-content h1 {
-  color: var(--amber);
+  margin-top: 1rem;
+  color: var(--accent);
   font-size: 1.8rem;
   letter-spacing: 2px;
-  margin-top: 1rem;
 }
 
 .tagline {
+  margin-top: 0.3rem;
   color: var(--dim);
   font-size: 0.95rem;
-  margin-top: 0.3rem;
 }
 
 .prompt {
-  color: var(--amber);
-  font-size: 1.1rem;
   display: inline-block;
   margin-top: 0.8rem;
+  color: var(--accent);
+  font-size: 1.1rem;
+}
+
+.hero-status {
+  display: flex;
+  align-items: center;
+  gap: 0.45rem;
+  margin-top: 0.9rem;
+  color: var(--text);
+  font-size: 0.82rem;
+}
+
+.spinner-glyph {
+  width: 1ch;
+  color: var(--accent);
 }
 
 .hidden {
@@ -317,12 +342,19 @@ body.booted footer {
   opacity: 1;
 }
 
-/* About grid: photo left, text right */
+/* About grid
+   Photo sits on the left while the bio and info box share the right side. */
 .about-grid {
   display: grid;
-  grid-template-columns: auto 1fr;
+  grid-template-columns: minmax(140px, 180px) 1fr;
   gap: 1.5rem;
   align-items: start;
+}
+
+.about-copy-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1.5fr) minmax(240px, 1fr);
+  gap: 1.2rem;
 }
 
 .profile-figure {
@@ -333,14 +365,14 @@ body.booted footer {
   width: 140px;
   height: 140px;
   object-fit: cover;
-  border-radius: 6px;
   border: 2px solid var(--panel-border);
+  border-radius: 0;
 }
 
 .profile-figure figcaption {
   margin-top: 0.5rem;
-  font-size: 0.82rem;
   color: var(--dim);
+  font-size: 0.82rem;
 }
 
 .about-text p {
@@ -348,18 +380,18 @@ body.booted footer {
 }
 
 .affiliation-logos {
-  list-style: none;
   display: flex;
   align-items: center;
   gap: 1.5rem;
   margin-top: 1.5rem;
   padding-top: 1rem;
   border-top: 1px solid var(--panel-border);
+  list-style: none;
 }
 
 .affiliation-logos img {
-  height: 40px;
   width: auto;
+  height: 40px;
   opacity: 0.8;
   transition: opacity 0.3s;
 }
@@ -368,19 +400,21 @@ body.booted footer {
   opacity: 1;
 }
 
-/* Skills grid: two columns */
+/* Skills grid
+   Two columns on wider screens, then it drops to one on smaller screens. */
 .skills-grid {
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 2rem;
 }
 
-/* Section sub-headings styled as terminal prompts */
+/* Section sub-headings
+   These smaller labels make the inner content feel like little terminal files. */
 .section-sub {
-  color: var(--amber);
+  margin: 1.2rem 0 0.6rem;
+  color: var(--accent);
   font-size: 0.95rem;
   font-weight: normal;
-  margin: 1.2rem 0 0.6rem;
 }
 
 .section-sub:first-child {
@@ -389,8 +423,7 @@ body.booted footer {
 
 /* ---------------------------
    TABLE
-   Education table with amber borders.
-   Uses thead/tbody structure per lesson.
+   Keeping the education table pretty plain so the GPA bars can do the visual work.
    --------------------------- */
 table {
   width: 100%;
@@ -406,12 +439,12 @@ td {
 }
 
 th {
-  background: rgba(255, 179, 71, 0.08);
-  color: var(--amber);
-  font-weight: bold;
-  text-transform: uppercase;
+  background: var(--warm-soft);
+  color: var(--accent);
   font-size: 0.78rem;
+  font-weight: bold;
   letter-spacing: 1px;
+  text-transform: uppercase;
 }
 
 td small {
@@ -420,34 +453,33 @@ td small {
 
 /* ---------------------------
    LISTS
-   Ordered, unordered, and definition list styling.
-   <mark> overridden to amber bg instead of default yellow.
+   Base list styling lives here, including the GPA groups and definition lists.
    --------------------------- */
 ul,
 ol {
+  margin-bottom: 0;
   padding-left: 1.5rem;
-  margin-bottom: 0rem;
 }
 
 li {
-  margin-bottom: 0rem;
+  margin-bottom: 0;
   font-size: 0.9rem;
 }
 
 li::marker {
-  color: var(--amber);
+  color: var(--accent);
 }
 
-ol[type="I"] {
+ol[type='I'] {
   padding-left: 2rem;
 }
 
-ol[type="I"]>li {
-  color: var(--amber);
+ol[type='I'] > li {
   margin-bottom: 0.6rem;
+  color: var(--accent);
 }
 
-ol[type="I"]>li>ul {
+ol[type='I'] > li > ul {
   color: var(--text);
 }
 
@@ -456,87 +488,81 @@ dl {
 }
 
 dt {
-  color: var(--amber);
-  font-weight: bold;
-  font-size: 0.88rem;
   margin-top: 0.8rem;
+  color: var(--accent);
+  font-size: 0.88rem;
+  font-weight: bold;
 }
 
 dd {
+  margin-top: 0.15rem;
+  margin-left: 1rem;
   color: var(--dim);
   font-size: 0.85rem;
-  margin-left: 1rem;
-  margin-top: 0.15rem;
 }
 
 mark {
-  background: rgba(255, 179, 71, 0.2);
-  color: var(--amber);
   padding: 0.1rem 0.4rem;
+  background: var(--warm-tag);
+  color: var(--accent);
   border-radius: 3px;
 }
 
 small {
+  margin-left: 0.3rem;
   color: var(--dim);
   font-size: 0.8em;
-  margin-left: 0.3rem;
 }
 
 ins {
-  color: #4ade80;
+  color: var(--success);
   text-decoration: none;
 }
 
-del {
-  color: #f87171;
-  opacity: 0.6;
-}
-
 a {
-  color: var(--amber);
+  color: var(--accent);
   text-decoration: none;
   transition: color 0.25s;
 }
 
 a:hover {
-  color: var(--violet);
+  color: var(--accent-alt);
 }
 
 /* ---------------------------
    FORM
-   Terminal-styled contact form.
-   Fieldset/legend as section header, inputs styled to match.
+   Same terminal-style form, just using the shared colors from above.
    --------------------------- */
 fieldset {
-  border: 1px solid var(--panel-border);
   padding: 1.2rem;
-  border-radius: 4px;
+  border: 1px solid var(--panel-border);
+  border-radius: 0;
 }
 
 legend {
-  color: var(--amber);
-  font-size: 0.9rem;
   padding: 0 0.5rem;
+  color: var(--accent);
+  font-size: 0.9rem;
 }
 
 label {
   display: block;
-  color: var(--amber);
-  font-size: 0.85rem;
   margin-top: 0.8rem;
   margin-bottom: 0.25rem;
+  color: var(--accent);
+  font-size: 0.85rem;
 }
 
-input[type="text"],
-input[type="email"],
-input[type="password"],
+input[type='text'],
+input[type='email'],
+input[type='password'],
 select,
 textarea {
   width: 100%;
   padding: 0.5rem 0.8rem;
-  background: rgba(10, 10, 20, 0.6);
+  background: var(--input-bg);
   border: 1px solid var(--panel-border);
-  border-radius: 4px;
+  border-radius: 0;
   color: var(--text);
   font-family: var(--font);
   font-size: 0.88rem;
@@ -547,7 +573,7 @@ textarea {
 input:focus,
 select:focus,
 textarea:focus {
-  border-color: var(--amber);
+  border-color: var(--accent);
 }
 
 select {
@@ -559,53 +585,53 @@ select option {
   color: var(--text);
 }
 
-button[type="submit"] {
+button[type='submit'] {
   display: inline-block;
   margin-top: 1rem;
   padding: 0.55rem 1.5rem;
   background: transparent;
-  border: 1px solid var(--amber);
-  color: var(--amber);
+  border: 1px solid var(--accent);
+  border-radius: 0;
+  color: var(--accent);
   font-family: var(--font);
   font-size: 0.9rem;
   cursor: pointer;
-  border-radius: 4px;
   transition: background 0.3s, transform 0.15s;
 }
 
-button[type="submit"]:hover {
-  background: rgba(255, 179, 71, 0.12);
+button[type='submit']:hover {
+  background: var(--warm-hover);
 }
 
-button[type="submit"]:active {
+button[type='submit']:active {
   transform: scale(0.97);
 }
 
 #form-output {
-  margin-top: 1rem;
-  color: #4ade80;
-  font-size: 0.88rem;
   min-height: 1.2rem;
+  margin-top: 1rem;
+  color: var(--success);
+  font-size: 0.88rem;
 }
 
 /* ---------------------------
    FOOTER
+   Just the quiet little echo line at the bottom.
    --------------------------- */
 footer {
-  text-align: center;
+  margin-top: 2rem;
   padding: 2rem 1rem;
+  border-top: 1px solid var(--panel-border);
   color: var(--dim);
   font-size: 0.78rem;
-  border-top: 1px solid var(--panel-border);
-  margin-top: 2rem;
+  text-align: center;
 }
 
 /* ---------------------------
    ANIMATIONS
-   Blinking cursor keyframe, used on the hero prompt.
+   Only the blinking cursor needs animation here.
    --------------------------- */
 @keyframes blink {
-
   0%,
   100% {
     opacity: 1;
@@ -617,13 +643,13 @@ footer {
 }
 
 .cursor {
+  color: var(--accent);
   animation: blink 1s step-end infinite;
-  color: var(--amber);
 }
 
-/* === MODIFIED: work.sh section ===
-   Job cards with optional amber left border for current role.
-   .current-role gets the stronger visual treatment.
+/* ---------------------------
+   WORK
+   Base job-card styling lives here before the denser TUI card pass later on.
    --------------------------- */
 .job-card {
   padding: 1rem 0;
@@ -635,38 +661,38 @@ footer {
 }
 
 .current-role {
-  border-left: 3px solid var(--amber);
   padding-left: 1rem;
+  border-left: 3px solid var(--accent);
 }
 
 .current-role .job-title {
+  color: var(--accent);
   font-size: 1.1rem;
-  color: var(--amber);
 }
 
 .job-card h3 {
-  font-size: 0.95rem;
   margin-bottom: 0.15rem;
+  font-size: 0.95rem;
 }
 
 .job-card h4 {
+  margin-bottom: 0.5rem;
+  color: var(--dim);
   font-size: 0.82rem;
   font-weight: normal;
-  color: var(--dim);
-  margin-bottom: 0.5rem;
 }
 
-/* === MODIFIED: projects.sh section ===
-   Project cards with amber left border and tech-stack tags.
-   Category headers styled as "// 01. HARDWARE ENGINEERING".
+/* ---------------------------
+   PROJECTS
+   These are the older project styles before the sharper TUI card overrides below.
    --------------------------- */
 .project-category {
+  margin: 1.8rem 0 0.8rem;
   color: var(--dim);
   font-size: 0.82rem;
   font-weight: normal;
-  text-transform: uppercase;
   letter-spacing: 2px;
-  margin: 1.8rem 0 0.8rem;
+  text-transform: uppercase;
 }
 
 .project-category:first-child {
@@ -674,40 +700,40 @@ footer {
 }
 
 .project-card {
-  border-left: 2px solid var(--panel-border);
-  padding: 0.8rem 0 0.8rem 1rem;
   margin-bottom: 0.6rem;
+  padding: 0.8rem 0 0.8rem 1rem;
+  border-left: 2px solid var(--panel-border);
   transition: border-color 0.3s;
 }
 
 .project-card:hover {
-  border-color: var(--amber);
+  border-color: var(--accent);
 }
 
 .project-card h4 {
-  font-size: 0.92rem;
   margin-bottom: 0.2rem;
+  font-size: 0.92rem;
 }
 
 .tech-stack {
-  font-size: 0.75rem;
-  color: var(--dim);
   margin-bottom: 0.4rem;
+  color: var(--dim);
+  font-size: 0.75rem;
   letter-spacing: 0.5px;
 }
 
-/* === MODIFIED: research.sh section ===
-   Definition list with amber dt (styled as terminal commands),
-   off-white dd, and dashed separators between entries.
+/* ---------------------------
+   RESEARCH
+   This is the base research styling before the accent-heavy TUI version below.
    --------------------------- */
 .research-list dt {
-  color: var(--amber);
-  font-family: var(--font);
-  font-weight: bold;
-  font-size: 0.88rem;
   margin-top: 1.2rem;
   padding-top: 1.2rem;
-  border-top: 1px dashed rgba(107, 114, 128, 0.3);
+  border-top: 1px dashed var(--rule-muted);
+  color: var(--accent);
+  font-family: var(--font);
+  font-size: 0.88rem;
+  font-weight: bold;
 }
 
 .research-list dt:first-child {
@@ -717,21 +743,25 @@ footer {
 }
 
 .research-list dd {
+  margin-top: 0.3rem;
+  margin-left: 0;
   color: var(--text);
   font-size: 0.85rem;
-  margin-left: 0;
-  margin-top: 0.3rem;
   line-height: 1.6;
 }
 
 /* ---------------------------
    RESPONSIVE
-   Stack grids on smaller screens.
+   On smaller screens I mostly just stack the grids and loosen the tighter desktop layout.
    --------------------------- */
 @media (max-width: 768px) {
   .about-grid {
     grid-template-columns: 1fr;
     text-align: center;
+  }
+
+  .about-copy-grid {
+    grid-template-columns: 1fr;
   }
 
   .skills-grid {
@@ -758,5 +788,404 @@ footer {
 
   table {
     font-size: 0.78rem;
+  }
+}
+
+/* === TUI: SKILL BARS === */
+/* These rows fake a terminal meter by stacking the empty and filled characters. */
+.bar-row {
+  display: grid;
+  grid-template-columns: minmax(0, 13rem) 10ch 4.25rem;
+  gap: 0.85rem;
+  align-items: center;
+  margin-bottom: 0.6rem;
+}
+
+.metric-label-group {
+  min-width: 0;
+}
+
+.metric-label {
+  display: block;
+  color: var(--text);
+  font-size: 0.86rem;
+}
+
+.metric-label-group small {
+  display: block;
+  margin-left: 0;
+  color: var(--dim);
+  font-size: 0.72rem;
+}
+
+.metric-value {
+  color: var(--accent);
+  font-size: 0.82rem;
+  text-align: right;
+}
+
+.grade-row .metric-value {
+  color: var(--text);
+}
+
+.skill-bar {
+  position: relative;
+  width: 10ch;
+  height: 1em;
+  font-size: 0.92rem;
+  letter-spacing: 0.04em;
+}
+
+.skill-bar span {
+  position: absolute;
+  inset: 0;
+  display: block;
+  overflow: hidden;
+  white-space: nowrap;
+  line-height: 1;
+}
+
+.bar-empty {
+  color: rgba(228, 228, 231, 0.18);
+}
+
+.bar-fill {
+  width: 0;
+  color: var(--accent);
+}
+
+.skill-notes {
+  margin-top: 1rem;
+  padding-top: 0.9rem;
+  border-top: 1px dashed var(--rule-muted);
+}
+
+.skill-notes li {
+  margin-bottom: 0.25rem;
+}
+
+.gpa-list {
+  margin-top: 0.6rem;
+}
+
+.gpa-group + .gpa-group {
+  margin-top: 1rem;
+  padding-top: 1rem;
+  border-top: 1px dashed var(--rule-muted);
+}
+
+.gpa-group-title {
+  margin-bottom: 0.65rem;
+  color: var(--accent);
+  font-size: 0.86rem;
+  font-weight: normal;
+}
+
+/* === TUI: BADGES === */
+/* Sharp corners help these read like text-mode chips instead of soft app pills. */
+.badge-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.45rem;
+  margin-bottom: 0.8rem;
+}
+
+.badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.12rem 0.45rem;
+  border: 1px solid var(--accent);
+  background: rgba(255, 204, 0, 0.04);
+  color: var(--accent);
+  font-size: 0.74rem;
+  line-height: 1.4;
+}
+
+/* === TUI: CARDS === */
+/* This is where the denser TUI framing gets layered on top of the base cards. */
+.terminal-window::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(255, 204, 0, 0.6), transparent);
+  pointer-events: none;
+}
+
+.job-card {
+  margin-bottom: 0.9rem;
+  padding: 1rem 1rem 1rem 1.1rem;
+  border: 1px solid rgba(255, 204, 0, 0.12);
+  background: rgba(255, 204, 0, 0.03);
+}
+
+.job-card:last-child {
+  margin-bottom: 0;
+  border-bottom: 1px solid rgba(255, 204, 0, 0.12);
+}
+
+.job-heading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-bottom: 0.2rem;
+}
+
+.current-role {
+  padding-left: 1.1rem;
+  border-left: 3px solid var(--accent);
+}
+
+.project-category {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  margin: 1.8rem 0 1rem;
+  color: var(--accent);
+  font-size: 0.78rem;
+  letter-spacing: 1.6px;
+  text-transform: uppercase;
+}
+
+.project-category::after {
+  content: '────────────────────────────────────────────────────────────────────────';
+  display: block;
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+  white-space: nowrap;
+  color: rgba(255, 204, 0, 0.35);
+}
+
+.project-card {
+  margin: 1.35rem 0 0;
+  padding: 1rem 1rem 0.95rem;
+  border: 1px solid rgba(255, 204, 0, 0.15);
+  background: rgba(255, 204, 0, 0.03);
+  transition: border-color 0.25s, transform 0.25s, background 0.25s;
+}
+
+.project-card:hover {
+  border-color: var(--accent);
+  transform: translateY(-2px);
+  background: rgba(255, 204, 0, 0.05);
+}
+
+.project-card-title {
+  display: inline-block;
+  margin: -1.8rem 0 0.8rem;
+  padding: 0 0.5rem;
+  background: linear-gradient(180deg, rgba(18, 18, 18, 0.96) 0%, rgba(9, 9, 9, 0.98) 100%);
+  color: var(--accent);
+  font-size: 0.88rem;
+  font-weight: bold;
+}
+
+.project-card-title small {
+  color: var(--dim);
+  font-size: 0.82em;
+}
+
+.project-card ul {
+  padding-left: 0;
+  list-style: none;
+}
+
+.project-card li {
+  margin-bottom: 0.28rem;
+}
+
+.research-list dt {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.6rem;
+  margin-top: 1.2rem;
+  padding-top: 1.15rem;
+  border-top: 1px dashed var(--rule-muted);
+  color: var(--accent);
+  font-size: 0.9rem;
+  font-weight: bold;
+}
+
+.research-list dt:first-child {
+  margin-top: 0;
+  padding-top: 0;
+  border-top: none;
+}
+
+.research-accent {
+  color: var(--accent);
+}
+
+.research-list dd {
+  margin-top: 0.3rem;
+  margin-left: 1.3rem;
+  color: var(--text);
+  font-size: 0.85rem;
+  line-height: 1.65;
+}
+
+.research-list dd small {
+  margin-left: 0;
+}
+
+/* === TUI: SECTION HEADERS === */
+/* The block label stays on the left, then ::after stretches the line across the rest. */
+.tui-section-header {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  align-items: center;
+  gap: 0.7rem;
+  color: var(--accent);
+  font-size: 0.9rem;
+  letter-spacing: 1.6px;
+  text-transform: uppercase;
+}
+
+.section-block {
+  flex: none;
+}
+
+.section-header-label {
+  white-space: nowrap;
+}
+
+.tui-section-header::after {
+  content: '────────────────────────────────────────────────────────────────────────────────';
+  display: block;
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+  white-space: nowrap;
+  color: rgba(255, 204, 0, 0.35);
+}
+
+/* === TUI: INFO BOX === */
+/* This keeps the about facts tight and structured, like a small key-value panel. */
+.info-box {
+  padding: 0.85rem 0.95rem;
+  border: 1px solid rgba(255, 204, 0, 0.14);
+  background: rgba(255, 204, 0, 0.03);
+}
+
+.info-box dl {
+  margin: 0;
+}
+
+.info-row {
+  display: grid;
+  grid-template-columns: 4.7rem 1fr;
+  gap: 0.55rem;
+  padding: 0.32rem 0;
+  border-bottom: 1px dashed rgba(255, 204, 0, 0.08);
+}
+
+.info-row:last-child {
+  border-bottom: none;
+}
+
+.info-row dt {
+  margin: 0;
+  color: var(--dim);
+  font-size: 0.76rem;
+  font-weight: normal;
+  letter-spacing: 1px;
+  text-transform: lowercase;
+}
+
+.info-row dd {
+  margin: 0;
+  color: var(--text);
+  font-size: 0.82rem;
+  word-break: break-word;
+}
+
+.info-row dd a {
+  color: var(--text);
+}
+
+.info-row dd a:hover {
+  color: var(--accent);
+}
+
+.info-separator {
+  margin-right: 0.35rem;
+  color: var(--accent);
+}
+
+/* === TUI: STATUS CHIPS === */
+/* Filled and hollow dots make current vs past roles readable without huge labels. */
+.status-chip {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.15rem 0.45rem;
+  border: 1px solid var(--panel-border);
+  font-size: 0.72rem;
+  letter-spacing: 1.1px;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+.status-chip.current {
+  border-color: rgba(255, 204, 0, 0.42);
+  background: rgba(255, 204, 0, 0.08);
+  color: var(--accent);
+}
+
+.status-chip.past {
+  border-color: rgba(113, 113, 122, 0.5);
+  background: rgba(113, 113, 122, 0.08);
+  color: var(--dim);
+}
+
+@media (max-width: 768px) {
+  .about-grid {
+    text-align: left;
+  }
+
+  .profile-figure {
+    justify-self: center;
+    text-align: center;
+  }
+
+  .terminal-dots {
+    display: none;
+  }
+
+  .tui-section-header {
+    gap: 0.45rem;
+    font-size: 0.82rem;
+  }
+
+  .bar-row {
+    grid-template-columns: 1fr;
+    gap: 0.35rem;
+  }
+
+  .metric-value {
+    text-align: left;
+  }
+
+  .job-heading {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .project-card-title {
+    display: block;
+    margin: -1.7rem 0 0.8rem;
+  }
+
+  .info-row {
+    grid-template-columns: 1fr;
+    gap: 0.15rem;
+  }
+
+  .research-list dd {
+    margin-left: 1rem;
   }
 }
