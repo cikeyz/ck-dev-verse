@@ -1,6 +1,4 @@
-/* --- 1. BOOT SEQUENCE DATA ---
-   These are the lines that print after axiom_start runs.
-   I kept them plain so they are easy to tweak later. */
+
 var todayText = new Date().toLocaleDateString("en-US", {
   weekday: "long",
   year: "numeric",
@@ -91,8 +89,6 @@ function printBootLine(index) {
   );
 }
 
-/* --- 3. SMOOTH SCROLL ---
-   This keeps the nav clicks from doing the hard anchor jump. */
 var navLinks = document.querySelectorAll("#main-nav a");
 
 navLinks.forEach(function (link) {
@@ -104,9 +100,6 @@ navLinks.forEach(function (link) {
   });
 });
 
-/* --- 4. ACTIVE NAV HIGHLIGHT ---
-   IntersectionObserver watches each section and lights up
-   the matching nav link while that section is in view. */
 var sections = document.querySelectorAll("section, #hero");
 var observer = new IntersectionObserver(
   function (entries) {
@@ -130,8 +123,6 @@ function setActiveLink(id) {
   if (matchingLink) matchingLink.classList.add("active");
 }
 
-/* --- 5. CONTACT FORM HANDLER ---
-   On submit I clear the form and print the same terminal-style reply below it. */
 var contactForm = document.getElementById("contact-form");
 var formOutput = document.getElementById("form-output");
 

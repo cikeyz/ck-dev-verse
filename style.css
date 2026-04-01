@@ -1,7 +1,4 @@
-/* ---------------------------
-   RESET
-   Just clearing the default spacing first so the rest is easier to control.
-   --------------------------- */
+
 *,
 *::before,
 *::after {
@@ -10,10 +7,6 @@
     padding: 0;
 }
 
-/* ---------------------------
-   CSS VARIABLES
-   I moved the repeated colors here so the file is easier to trim and reuse.
-   --------------------------- */
 :root {
     --bg: #030303;
     --panel: rgba(15, 15, 15, 0.95);
@@ -34,14 +27,6 @@
     --font: "Cascadia Code", "Consolas", "SF Mono", "Menlo", monospace;
 }
 
-/* ---------------------------
-   SPACE BACKGROUND
-   This is the star field and the soft nebula glow behind everything.
-   --------------------------- */
-/* Pre-boot fix:
-   main and footer are faded out, but they still keep their height.
-   I lock scrolling until .booted lands on html and body so you do not
-   scroll through empty space before the boot is done. */
 html:not(.booted) {
     height: 100%;
     overflow-y: hidden;
@@ -173,10 +158,6 @@ body::after {
         );
 }
 
-/* ---------------------------
-   NAVIGATION
-   Fixed nav up top, styled like a terminal command row.
-   --------------------------- */
 #main-nav {
     position: fixed;
     top: 0;
@@ -218,10 +199,6 @@ body::after {
     color: var(--accent);
 }
 
-/* ---------------------------
-   TERMINAL WINDOW
-   This is the shared card shell each section uses.
-   --------------------------- */
 .terminal-window {
     max-width: 900px;
     margin: 0 auto;
@@ -269,10 +246,6 @@ body::after {
     padding: 1.5rem 1.8rem;
 }
 
-/* ---------------------------
-   SECTIONS
-   Shared spacing first, then the hero and the section layouts.
-   --------------------------- */
 section {
     padding: 2rem 1.2rem;
     scroll-margin-top: 3.5rem;
@@ -343,9 +316,6 @@ body.booted footer {
     caret-color: var(--accent);
 }
 
-/* Hero content reveal
-   .hidden only changes opacity, so the box still keeps space.
-   I collapse it too, so the hero only shows the boot log and command line first. */
 #hero-content.hidden {
     max-height: 0;
     margin: 0;
@@ -393,9 +363,6 @@ body.booted footer {
     transition: opacity 0.8s ease;
 }
 
-/* About grid
-   Photo goes on the left, text goes on the right.
-   The figure stays centered in its own column. */
 .about-grid {
     display: flex;
     flex-direction: row;
@@ -436,8 +403,6 @@ body.booted footer {
     margin-bottom: 0.8rem;
 }
 
-/* Logo strip
-   Flex keeps the logos grouped together so the row does not feel too empty. */
 .affiliation-logos {
     display: flex;
     flex-wrap: wrap;
@@ -501,8 +466,6 @@ body.booted footer {
     gap: 0.9rem;
 }
 
-/* Skills spacing
-   The global list rules are a bit tight here, so this section gets its own spacing pass. */
 #skills .terminal-body {
     padding: 1.75rem 1.85rem;
 }
@@ -513,8 +476,6 @@ body.booted footer {
     border-bottom: 1px solid var(--rule-muted);
 }
 
-/* Tag rows
-   These sit above the bullet list and share the same left gutter as the rows under them. */
 #skills .skills-grid > article:first-child {
     --skills-gutter: 0.85rem;
 }
@@ -556,8 +517,6 @@ body.booted footer {
     list-style: none;
 }
 
-/* Skills rows
-   The small marker stays in the gutter, then the label and subline stack beside it. */
 #skills .skills-item {
     display: grid;
     grid-template-columns: var(--skills-gutter) minmax(0, 1fr);
@@ -617,8 +576,6 @@ body.booted footer {
     line-height: 1.55;
 }
 
-/* Section sub-headings
-   These are the smaller terminal-style labels inside each card. */
 .section-sub {
     margin: 1.2rem 0 0.6rem;
     color: var(--accent);
@@ -630,10 +587,6 @@ body.booted footer {
     margin-top: 0;
 }
 
-/* ---------------------------
-   TABLE
-   Keeping the school table simple and readable here.
-   --------------------------- */
 table {
     width: 100%;
     border-collapse: collapse;
@@ -660,10 +613,6 @@ td small {
     color: var(--dim);
 }
 
-/* ---------------------------
-   LISTS
-   This handles the normal lists, GPA list, and definition list.
-   --------------------------- */
 ul,
 ol {
     margin-bottom: 0;
@@ -692,8 +641,6 @@ ol[type="I"] > li > ul {
     color: var(--text);
 }
 
-/* Pending GPA
-   I used a fake loading line here instead of a number since the term is still ongoing. */
 #education .gpa-loading {
     display: inline-block;
     margin-left: 0.2rem;
@@ -771,10 +718,6 @@ a:hover {
     color: var(--accent-alt);
 }
 
-/* ---------------------------
-   FORM
-   Same terminal-style form, just with the repeated colors trimmed down.
-   --------------------------- */
 fieldset {
     padding: 1.2rem;
     border: 1px solid var(--panel-border);
@@ -858,10 +801,6 @@ button[type="submit"]:active {
     font-size: 0.88rem;
 }
 
-/* ---------------------------
-   FOOTER
-   Just the quiet little terminal echo at the bottom.
-   --------------------------- */
 footer {
     margin-top: 2rem;
     padding: 2rem 1rem;
@@ -871,10 +810,6 @@ footer {
     text-align: center;
 }
 
-/* ---------------------------
-   ANIMATIONS
-   Just the blinking cursor lives here.
-   --------------------------- */
 @keyframes blink {
     0%,
     100% {
@@ -891,10 +826,6 @@ footer {
     animation: blink 1s step-end infinite;
 }
 
-/* ---------------------------
-   WORK
-   This section uses a two-column split: dates on the left, role details on the right.
-   --------------------------- */
 #work .job-card--split {
     display: grid;
     grid-template-columns: 6.75rem minmax(0, 1fr);
@@ -1001,10 +932,6 @@ footer {
     font-size: 0.92em;
 }
 
-/* ---------------------------
-   PROJECTS
-   Category labels stay subtle, while each project keeps its left border.
-   --------------------------- */
 .project-category {
     margin: 1.8rem 0 0.8rem;
     color: var(--dim);
@@ -1041,10 +968,6 @@ footer {
     letter-spacing: 0.5px;
 }
 
-/* ---------------------------
-   RESEARCH
-   The command labels sit on top, then the entry text follows underneath.
-   --------------------------- */
 .research-list dt {
     margin-top: 1.2rem;
     padding-top: 1.2rem;
@@ -1069,10 +992,6 @@ footer {
     line-height: 1.6;
 }
 
-/* ---------------------------
-   RESPONSIVE
-   On smaller screens I just stack the grids and tighten the spacing a bit.
-   --------------------------- */
 @media (max-width: 768px) {
     .about-grid {
         flex-direction: column;
@@ -1139,7 +1058,7 @@ footer {
         text-align: left;
     }
 
-    /* The end date comes first in the DOM, so I add the dash after it on mobile. */
+    
     #work .job-date-end::after {
         content: "\00a0-\00a0";
     }
